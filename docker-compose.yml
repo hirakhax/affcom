@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - ./app:/app
+    ports:
+      - 8000:8000
+    command: sh -c "python manage.py wait_for_db && python manage.py runserver"
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=devuser
+      - DB_PASSWORD=changeme
+      - DB_NAME=devdb
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_DB=devdb
